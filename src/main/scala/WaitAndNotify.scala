@@ -36,10 +36,44 @@ object WaitAndNotify extends App {
     }
   })
 
-  consumer.start()
-  producer.start()
+//  consumer.start()
+//  producer.start()
+
+
+  val bell = new Object // shared object
+  (1 to 5).foreach(i => {
+    new Thread(() => {
+      bell.synchronized {
+        println(s"thread $i is waiting...")
+        bell.wait()
+      }
+      // notified
+      println(s"thread $i is Ahhhhhhhhhh")
+
+
+    }).start()
+  })
+
+  new Thread(() => {
+    Thread.sleep(3000)
+    bell.synchronized {
+      bell.notifyAll()
+    }
+  }).start()
+
 
 
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
